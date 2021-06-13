@@ -1,0 +1,5 @@
+Driver=ClickHouse ODBC Driver (Unicode);
+Host=localhost;
+Port=8123;
+User=default;
+Database=v8logs

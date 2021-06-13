@@ -1,0 +1,33 @@
+version: "3.3"
+services:
+  clickhouse:
+    image: yandex/clickhouse-server
+    ulimits:
+        nofile:
+          soft: 262144
+          hard: 262144 
+    ports:
+      - "8123:8123"
+    volumes:
+      - "clickhouse-data:/var/lib/clickhouse"
+  click-ui:
+    image: spoonest/clickhouse-tabix-web-client
+    environment: 
+      CH_NAME: 1C_Logs
+      CH_HOST: localhost:8123
+    depends_on:
+        - clickhouse
+    ports:
+      - "8080:80"
+  collector:
+    build: ./log-exporter
+    image: v8logexporter
+    environment:
+      CH_HOST: clickhouse
+      CH_PORT: 8123
+    volumes: 
+      - "D:/1CDB/unf_demo/1Cv8Log:/var/logdata"
+    depends_on:
+      - clickhouse
+volumes:
+  clickhouse-data:
